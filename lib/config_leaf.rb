@@ -1,7 +1,7 @@
 require 'config_leaf/version'
 require 'config_leaf/wrapper'
 
-module Configleaf
+module ConfigLeaf
   class << self
     # Wraps an object and redirects public methods to it, to allow for a terse, block-based API.
     #
@@ -70,9 +70,11 @@ module Configleaf
     #     end
     #
     def wrap(object, &block)
-      if block.arity == 0
+      raise ArgumentError, "block is required" unless block_given?
+
+      if block.arity == 0 # e.g. { }
         Wrapper.wrap object, &block
-      else
+      else                # e.g. {|me| }
         block.call object
       end
     end
