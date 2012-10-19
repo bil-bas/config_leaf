@@ -1,21 +1,19 @@
 require File.expand_path("../../teststrap", __FILE__)
 
+class Owner
+  def frog; end
+  def fish; end
+  def fish=(fish); end
+  def knees=(knees); end
+  def add_cheese(a, b); end
+  def add_peas(a, &block); end
+
+  protected
+  def wibble; end
+end
+
 describe ConfigLeaf::Wrapper do
-  let :owner_class do
-    Owner ||= Class.new do
-      def frog; end
-      def fish; end
-      def fish=(fish); end
-      def knees=(knees); end
-      def add_cheese(a, b); end
-      def add_peas(a, &block); end
-
-      protected
-      def wibble; end
-    end
-  end
-
-  let(:owner) { owner_class.new }
+  let(:owner) { Owner.new }
   let(:subject) { described_class.wrap owner }
 
   let :expected_methods do
@@ -38,19 +36,19 @@ describe ConfigLeaf::Wrapper do
   
   context "dynamic method redirection" do
     it "a method that doesn't exist on the wrapped object should fail" do
-      ->{ subject.wobble }.should raise_error NoMethodError, /<Owner:0x\w+> does not have either public method, #wobble or #wobble=/
+      lambda { subject.wobble }.should raise_error NoMethodError, /<Owner:0x\w+> does not have either public method, #wobble or #wobble=/
     end
 
     it "a protected method on the wrapped object should not be accessible" do
-      ->{ subject.wibble }.should raise_error NoMethodError, /<Owner:0x\w+> does not have either public method, #wibble or #wibble=/
+      lambda { subject.wibble }.should raise_error NoMethodError, /<Owner:0x\w+> does not have either public method, #wibble or #wibble=/
     end
 
     it "redirect to a setter, that has no corresponding getter, even if no arguments are passed" do
-      ->{ subject.knees }.should raise_error ArgumentError
+      lambda { subject.knees }.should raise_error ArgumentError
     end
 
     it "redirect to a getter, that has no corresponding setter, even if arguments are passed" do
-      ->{ subject.frog 25 }.should raise_error ArgumentError
+      lambda { subject.frog 25 }.should raise_error ArgumentError
     end
 
     it "redirect a getter (that has no corresponding setter)" do

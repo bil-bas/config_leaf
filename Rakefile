@@ -16,4 +16,4 @@ end
 RSpec::Core::RakeTask.new do
 end
 
-task default: :spec
+task :default => :spec

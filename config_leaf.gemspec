@@ -23,4 +23,5 @@ END
   gem.add_development_dependency "rr", "~> 1.0.4"
   gem.add_development_dependency "yard", "~> 0.8.3"
   gem.add_development_dependency "redcarpet", "~> 2.1.1"
+  gem.add_development_dependency "rake"
 end
