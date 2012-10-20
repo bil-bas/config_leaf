@@ -88,6 +88,16 @@ describe ConfigLeaf::Wrapper do
     end
   end
 
+  context "in block" do
+    it "should fail if an ivar were changed during the block, since they would be discarded!" do
+      lambda { described_class.wrap owner do @frog = 12 end }.should raise_error RuntimeError, "Instance variable @frog set in ConfigLeaf scope"
+    end
+
+    it "should fail if any ivars were changed during the block, since they would be discarded!" do
+      lambda { described_class.wrap owner do @frog = 12; @fish = 1 end }.should raise_error RuntimeError, "Instance variables @frog, @fish set in ConfigLeaf scope"
+    end
+  end
+
   describe "" do
     it "should instance_eval when given a block on the constructor (.new)" do
       mock(owner).frog(5)

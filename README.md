@@ -62,7 +62,7 @@ their object has been instantiated:
       value list.size     # Calls object.value = object.list.size
       reverse!            # Calls object.reverse!
 
-      @value = 99         # Would set @value on the wrapper, not in the wrapped object, so has no effect.
+      ## @value = 99      # Would set @value on the wrapper, not in the wrapped object, so raises an exception.
 
       ## explode!         # Not allowed because it is protected (raises an exception).
     end

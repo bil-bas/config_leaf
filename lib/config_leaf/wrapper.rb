@@ -37,6 +37,11 @@ module ConfigLeaf
       end
 
       instance_eval &block if block_given?
+
+      if instance_variables != [:@_owner]
+        altered = instance_variables - [:@_owner]
+        raise "Instance variable#{altered.one? ? '' : 's'} #{altered.join ", "} set in ConfigLeaf scope"
+      end
     end
 
     private
