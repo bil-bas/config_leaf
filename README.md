@@ -54,17 +54,17 @@ their object has been instantiated:
       end
     end
 
-    # User uses the ConfigLeaf block.
+    # User uses the ConfigLeaf block syntax.
     object1 = Cheese.new do
       list [1, 2, 3]      # Calls object.list = [1, 2, 3]
       list << 4           # Calls object.list << 4
       value 5             # Calls object.value = 5
       value list.size     # Calls object.value = object.list.size
       reverse!            # Calls object.reverse!
-      
-      # These would be possible if using instance_eval, but not here.
-      #explode!           # Not allowed because it is protected (raises an exception).
-      #@value = 5         # Would set @value on the wrapper, not in the wrapped object, so has no effect.
+
+      @value = 99         # Would set @value on the wrapper, not in the wrapped object, so has no effect.
+
+      ## explode!         # Not allowed because it is protected (raises an exception).
     end
 
     # User chooses to not use ConfigLeaf block syntax by requesting a block parameter.
@@ -75,6 +75,9 @@ their object has been instantiated:
       c.value = c.list.size
       c.reverse!
     end
+
+    p object1 #=> #<Cheese:0x4340658 @value=4, @list=[4, 3, 2, 1]>
+    p object2 #=> #<Cheese:0x45d2b58 @value=4, @list=[4, 3, 2, 1]>
 
 Contributing
 ------------
