@@ -9,7 +9,7 @@ module ConfigLeaf
       alias_method :wrap, :new
     end
 
-    # If passed a block, the DSLWrapper will #instance_eval it automatically.
+    # If passed a block, the Wrapper will #instance_eval it automatically.
     #
     # @param owner [Object] Object to redirect the public methods of.
     def initialize(owner, &block)

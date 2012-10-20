@@ -41,7 +41,7 @@ their object has been instantiated:
         @list = []
 
         # Allow the user access via ConfigLeaf syntax.
-        ConfigLeaf.wrap object, &block if block_given?
+        ConfigLeaf.wrap self, &block if block_given?
       end
 
       def reverse!
@@ -55,7 +55,7 @@ their object has been instantiated:
     end
 
     # User uses the ConfigLeaf block.
-    object = Cheese.new do
+    object1 = Cheese.new do
       list [1, 2, 3]      # Calls object.list = [1, 2, 3]
       list << 4           # Calls object.list << 4
       value 5             # Calls object.value = 5
@@ -68,7 +68,7 @@ their object has been instantiated:
     end
 
     # User chooses to not use ConfigLeaf block syntax by requesting a block parameter.
-    object = Cheese.new do |c|
+    object2 = Cheese.new do |c|
       c.list = [1, 2, 3]
       c.list << 4
       c.value = 5
