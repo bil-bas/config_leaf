@@ -15,23 +15,22 @@ module ConfigLeaf
     def initialize(owner, &block)
       @_owner = owner
 
-      metaclass = class << self; self; end
+      metaclass = class << self; self end
+      methods = @_owner.public_methods - Object.public_instance_methods
 
-      (@_owner.public_methods - Object.public_instance_methods).each do |target_method|
-        redirection_method = target_method.to_s.chomp('=').to_sym
+      methods.map {|m| m.to_s.chomp('=').to_sym }.uniq.each do |getter|
+        setter = :"#{getter}="
 
-        metaclass.class_eval do
-          define_method redirection_method do |*args, &inner_block|
-            if @_owner.respond_to? "#{redirection_method}=" and (!args.empty? or not @_owner.respond_to? redirection_method)
-              # Has a setter and we are passing argument(s) or if we haven't got a corresponding getter.
-              @_owner.send "#{redirection_method}=", *args, &inner_block
-            elsif @_owner.respond_to? redirection_method
-              # We have a getter or general method
-              @_owner.send redirection_method, *args, &inner_block
-            else
-              # Should never reach here, but let's be paranoid.
-              raise NoMethodError, "#{@_owner} does not have a public method, ##{redirection_method}"
-            end
+        metaclass.send :define_method, getter do |*args, &inner_block|
+          if @_owner.respond_to? setter and (!args.empty? or not @_owner.respond_to? getter)
+            # Has a setter and we are passing argument(s) or if we haven't got a corresponding getter.
+            @_owner.send setter, *args, &inner_block
+          elsif @_owner.respond_to? getter
+            # We have a getter or general method
+            @_owner.send getter, *args, &inner_block
+          else
+            # Should never reach here, but let's be paranoid.
+            raise NoMethodError, "#@_owner does not have a public method, ##{getter}"
           end
         end
       end
