@@ -22,7 +22,7 @@ module ConfigLeaf
 
         metaclass.class_eval do
           define_method redirection_method do |*args, &inner_block|
-            if @_owner.respond_to? "#{redirection_method}=" and (args.any? or not @_owner.respond_to? redirection_method)
+            if @_owner.respond_to? "#{redirection_method}=" and (!args.empty? or not @_owner.respond_to? redirection_method)
               # Has a setter and we are passing argument(s) or if we haven't got a corresponding getter.
               @_owner.send "#{redirection_method}=", *args, &inner_block
             elsif @_owner.respond_to? redirection_method
@@ -38,8 +38,11 @@ module ConfigLeaf
 
       instance_eval &block if block_given?
 
-      if instance_variables != [:@_owner]
-        altered = instance_variables - [:@_owner]
+      # If any variables have been affected, then this is likely to be a misunderstanding of how the wrapper works.
+      expected_variables = (RUBY_VERSION =~ /^1\.8\./) ? %w<@_owner> : [:@_owner]
+
+      if instance_variables != expected_variables
+        altered = instance_variables - expected_variables
         raise "Instance variable#{altered.one? ? '' : 's'} #{altered.join ", "} set in ConfigLeaf scope"
       end
     end
