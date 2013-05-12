@@ -12,16 +12,19 @@ Installation
 ------------
 
 Add this line to your application's Gemfile:
-
+```ruby
     gem 'config_leaf'
+```
 
 And then execute:
-
+```bash
     $ bundle
+```
 
 Or install it yourself as:
-
+```bash
     $ gem install config_leaf
+```
 
 Usage
 -----
@@ -30,6 +33,7 @@ ConfigLeaf can be used directly by the end-user after an object has been created
 but it more likely used by those wanting to allow block setting of config after
 their object has been instantiated:
 
+```ruby
     require 'config_leaf'
     
     class Cheese
@@ -78,6 +82,7 @@ their object has been instantiated:
 
     p object1 #=> #<Cheese:0x4340658 @value=4, @list=[4, 3, 2, 1]>
     p object2 #=> #<Cheese:0x45d2b58 @value=4, @list=[4, 3, 2, 1]>
+```
 
 Contributing
 ------------
